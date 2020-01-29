@@ -4,6 +4,9 @@ import (
 	"fmt"
     "math/rand"
     "time"
+    "strings"
+
+    "github.com/fatih/color"
 )
 
 type Repo struct {
@@ -44,18 +47,48 @@ func NewContent(title string, body string) Content {
 }
 
 func (r *Repo) RandomContent() Content {
-	// Seed the random number generator using the current time (nanoseconds since epoch):
-        rand.Seed(time.Now().UnixNano())
+    rand.Seed(time.Now().UnixNano())
 
-        // Hard to predict...but is it possible? I know the day, and hour, probably minute...
-        cat := rand.Intn(1000)% len(r.Categories)
+    cat     := rand.Intn(1000)% len(r.Categories)
+    content := rand.Intn(1000)% len(r.Categories[cat].Contents)
 
-        content := rand.Intn(1000)% len(r.Categories[cat].Contents)
+    return r.Categories[cat].Contents[content]
+}
 
-        return r.Categories[cat].Contents[content]
+func (r *Repo) DisplayContentList() {
+	for _, cat := range r.Categories {
+		fmt.Println(cat.Name)
+		for _, content := range cat.Contents {
+			fmt.Println("\t - ", content.Title)
+		}
+	}
 }
 
 func (c *Content) Display() {
-	fmt.Println(c.Title)
-	fmt.Println(c.Body)
+	fmt.Println("")
+
+	DisplayTitle(c.Title)
+
+	for _, line := range strings.Split(strings.TrimSuffix(c.Body, "\n"), "\n") {
+		DisplayLine(line)
+	}
+}
+
+func DisplayTitle(title string) {
+	d := color.New(color.FgGreen, color.Bold)
+	d.Print(strings.Trim(title, "\n"))
+}
+
+func DisplayLine(line string) {
+	if strings.HasPrefix(line, ">") {
+		color.Yellow(strings.Trim(line, "\n"))
+		return
+	}
+
+	// Skip Wikipedi links
+	if strings.HasPrefix(line, "[") {
+		return
+	}
+
+	color.White(strings.Trim(line, "\n"))
 }

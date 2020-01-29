@@ -11,7 +11,7 @@ func Parse(readme string, r *repo.Repo) {
 	var cat = 0
 
 	var parseStatus = false
-	var content = repo.NewContent("", "")
+	var content repo.Content
     for _, line := range strings.Split(strings.TrimSuffix(readme, "\n"), "\n") {
 	    //fmt.Println(line)
 
@@ -34,8 +34,10 @@ func Parse(readme string, r *repo.Repo) {
 
 	    if (parseStatus == true) {
 	    	if IsContent(line) {
-		    	//fmt.Println("Content:", line)
-		    	r.Categories[cat].Contents = append(r.Categories[cat].Contents, content)
+	    		if content.Title != "" {
+	    			r.Categories[cat].Contents = append(r.Categories[cat].Contents, content)
+	    		}
+		    	
 		    	content = repo.NewContent(LineToTitle(line), "")
 		    	continue
 		    }

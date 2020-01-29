@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"io/ioutil"
+    "os"
 
 	"hacker-laws-cli/lib/repo"
 	"hacker-laws-cli/lib/parser"
@@ -11,6 +12,17 @@ import (
 
 func main() {
 	hackerLaws := repo.New()
+    arguments  := os.Args[1:]
+
+    if len(arguments) == 0 {
+        DisplayHelp()
+        return
+    }
+
+    if arguments[0] == "help" {
+        DisplayHelp()
+        return
+    }
 
 	response, err := http.Get("https://raw.githubusercontent.com/dwmkerr/hacker-laws/master/README.md")
     if err != nil {
@@ -25,11 +37,32 @@ func main() {
  
     responseString := string(responseData)
 
-    fmt.Println(hackerLaws)
-
     parser.Parse(responseString, &hackerLaws)
 
-    randomContent := hackerLaws.RandomContent()
+    if arguments[0] == "list" {
+        hackerLaws.DisplayContentList()
+        return
+    }
+    
+    if arguments[0] == "random" {
+        randomContent := hackerLaws.RandomContent()
+        randomContent.Display()
+        return
+    }
+}
 
-    randomContent.Display()
+func DisplayHelp() {
+    fmt.Println("Options for the command:")
+    fmt.Println(PadLeft("help", " ", 12), " ", "To display argument list.")
+    fmt.Println(PadLeft("list", " ", 12), " ", "To list the laws and principles.")
+    fmt.Println(PadLeft("random", " ", 12), " ", "To display random law or principles.")
+}
+
+func PadLeft(str, pad string, lenght int) string {
+    for {
+        str = pad + str
+        if len(str) >= lenght {
+            return str[0:lenght]
+        }
+    }
 }
