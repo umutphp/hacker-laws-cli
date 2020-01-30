@@ -5,6 +5,7 @@ import (
     "math/rand"
     "time"
     "strings"
+    "regexp"
 
     "github.com/fatih/color"
 )
@@ -67,28 +68,43 @@ func (r *Repo) DisplayContentList() {
 func (c *Content) Display() {
 	fmt.Println("")
 
-	DisplayTitle(c.Title)
+	c.DisplayTitle(c.Title)
 
 	for _, line := range strings.Split(strings.TrimSuffix(c.Body, "\n"), "\n") {
-		DisplayLine(line)
+		c.DisplayLine(line)
 	}
+
+	c.DisplayFooter()
 }
 
-func DisplayTitle(title string) {
+func (c *Content) DisplayTitle(title string) {
 	d := color.New(color.FgGreen, color.Bold)
-	d.Print(strings.Trim(title, "\n"))
+	d.Println("-----------------------------------------------------")
+	d.Println(strings.Trim(title, "\n"))
+	d.Println("-----------------------------------------------------")
 }
 
-func DisplayLine(line string) {
+func (c *Content) DisplayLine(line string) {
 	if strings.HasPrefix(line, ">") {
 		color.Yellow(strings.Trim(line, "\n"))
 		return
 	}
 
-	// Skip Wikipedi links
-	if strings.HasPrefix(line, "[") {
-		return
-	}
-
-	color.White(strings.Trim(line, "\n"))
+	//color.White(strings.Trim(line, "\n"))
+	color.White(strings.Trim(StripMDTags(line), "\n"))
 }
+
+func (c *Content) DisplayFooter() {
+	d := color.New(color.FgGreen, color.Bold)
+	d.Println("-----------------------------------------------------")
+	d.Println("         github.com/dwmkerr/hacker-laws by Dave Kerr ")
+	d.Println("-----------------------------------------------------")
+}
+
+func StripMDTags(line string) string {
+	re   := regexp.MustCompile(`\[(.*?)\]\((.*?)\)`)
+	line  = re.ReplaceAllString(line, `$1`)
+
+	return line
+}
+
