@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"io/ioutil"
     "os"
+    "time"
 
 	"hacker-laws-cli/lib/repo"
 	"hacker-laws-cli/lib/parser"
@@ -24,18 +25,7 @@ func main() {
         return
     }
 
-	response, err := http.Get("https://raw.githubusercontent.com/dwmkerr/hacker-laws/master/README.md")
-    if err != nil {
-        fmt.Println(err)
-    }
-    defer response.Body.Close()
-
-    responseData, err := ioutil.ReadAll(response.Body)
-    if err != nil {
-        fmt.Println(err)
-    }
- 
-    responseString := string(responseData)
+    responseString := ParseHackerLawsRepo()	
 
     parser.Parse(responseString, &hackerLaws)
 
@@ -65,4 +55,70 @@ func PadLeft(str, pad string, lenght int) string {
             return str[0:lenght]
         }
     }
+}
+
+func ParseHackerLawsRepo() string {
+    home, err := os.UserHomeDir()
+
+    if err != nil {
+        fmt.Println(err)
+        return ""
+    }
+
+    cacheFile := home + string(os.PathSeparator) + ".hlcache"
+
+    if FileExists(cacheFile) && FileUptoDate(cacheFile) {
+        content, err := ioutil.ReadFile(cacheFile)
+        
+        if err != nil {
+            fmt.Println(err)
+        } else {
+            return string(content)
+        }
+    }
+
+    response, err := http.Get("https://raw.githubusercontent.com/dwmkerr/hacker-laws/master/README.md")
+    if err != nil {
+        fmt.Println(err)
+    }
+    defer response.Body.Close()
+
+    responseData, err := ioutil.ReadAll(response.Body)
+
+    if err != nil {
+        fmt.Println(err)
+        return ""
+    } 
+
+    responseString := string(responseData)
+
+    file, err := os.Create(cacheFile)
+
+    if err != nil {
+        fmt.Println(err)
+        return ""
+    }
+
+    file.WriteString(responseString)
+
+    return responseString
+}
+
+func FileExists(filename string) bool {
+    info, err := os.Stat(filename)
+    if os.IsNotExist(err) {
+        return false
+    }
+    return !info.IsDir()
+}
+
+func FileUptoDate(filename string) bool {
+    info, _ := os.Stat(filename)
+    modifiedtime := info.ModTime()
+
+    return !IsOlderThanOneDay(modifiedtime)
+}
+
+func IsOlderThanOneDay(t time.Time) bool {
+      return time.Now().Sub(t) > 24*time.Hour
 }
