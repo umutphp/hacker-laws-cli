@@ -1,7 +1,6 @@
 package parser
 
 import (
-	//"fmt"
 	"strings"
 
 	"hacker-laws-cli/lib/repo"
@@ -13,14 +12,16 @@ func Parse(readme string, r *repo.Repo) {
 	var parseStatus = false
 	var content repo.Content
     for _, line := range strings.Split(strings.TrimSuffix(readme, "\n"), "\n") {
-	    //fmt.Println(line)
-
 	    if IsCategory(line) {
 	    	if !IsCategoryIgnored(line) {
-		    	//fmt.Println("Category:", line)
 		    	if (LineToTitle(line) == "Laws") {
 		    		cat = 0
-		    	} else {
+		    	} else {		    		
+		    		if (cat == 0) {
+		    			r.Categories[cat].Contents = append(r.Categories[cat].Contents, content)
+		    			content = repo.NewContent("", "")
+		    		}
+
 		    		cat = 1
 		    	}
 
@@ -45,6 +46,8 @@ func Parse(readme string, r *repo.Repo) {
 		    content.Body = content.Body + line + "\n"
 	    }
 	}
+
+	r.Categories[cat].Contents = append(r.Categories[cat].Contents, content)
 }
 
 func IsCategory(line string) bool {
@@ -57,7 +60,7 @@ func IsContent(line string) bool {
 }
 
 func IsCategoryIgnored(line string) bool {
-	ignoreList := []string{"Reading List", "Contributing", "TODO", "Introduction"}
+	ignoreList := []string{"Reading List", "Contributing", "TODO", "Introduction", "Translations"}
 	str        := LineToTitle(line)
 	for _, s := range ignoreList {
         if (s == str) {

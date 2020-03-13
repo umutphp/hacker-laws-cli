@@ -25,7 +25,7 @@ func main() {
         return
     }
 
-    responseString := ParseHackerLawsRepo()	
+    responseString := ParseHackerLawsRepo()
 
     parser.Parse(responseString, &hackerLaws)
 
