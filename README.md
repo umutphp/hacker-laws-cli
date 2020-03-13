@@ -14,9 +14,11 @@ go build
 Follow the steps;
 
 ```bash
-> git clone git@github.com:umutphp/hacker-laws-cli.git
-> cd hacker-laws-cli
-> go run main.go
+git clone git@github.com:umutphp/hacker-laws-cli.git
+
+cd hacker-laws-cli
+
+go run main.go
 ```
 
 ### Build as binary
@@ -24,10 +26,13 @@ Follow the steps;
 Follow the steps;
 
 ```bash
-> git clone git@github.com:umutphp/hacker-laws-cli.git
-> cd hacker-laws-cli
-> sudo go build -o /usr/local/bin/hacker-laws-cli .
-> hacker-laws-cli list
+git clone git@github.com:umutphp/hacker-laws-cli.git
+
+cd hacker-laws-cli
+
+sudo go build -o /usr/local/bin/hacker-laws-cli .
+
+hacker-laws-cli list
 ```
 
 ### Download and use official binary
@@ -35,8 +40,9 @@ Follow the steps;
 Visit the latest release page and download the binary correspondingly.
 
 ```bash
-> wget -O /usr/local/bin/hacker-laws-cli https://latest-binary-url
-> hacker-laws-cli
+wget -O /usr/local/bin/hacker-laws-cli https://latest-binary-url
+
+hacker-laws-cli
 ```
 
 ## How To Use
