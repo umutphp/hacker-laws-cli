@@ -1,11 +1,6 @@
 # Hacker Laws CLI
 
-
-## How To Build 
-
-```bash
-go build
-```
+A simple command line tool to give you a fancy command line interface to dive into laws, theories, principles and patterns listed in the repo [hacker-laws](https://github.com/dwmkerr/hacker-laws) by [Dave Kerr](https://github.com/dwmkerr).
 
 ## How To Install
 
