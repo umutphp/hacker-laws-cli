@@ -1,5 +1,7 @@
 # Hacker Laws CLI
 
+![Build And Release](https://github.com/umutphp/hacker-laws-cli/workflows/Build%20And%20Release/badge.svg) ![WOSPM Checker](https://github.com/umutphp/hacker-laws-cli/workflows/WOSPM%20Checker/badge.svg) [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v1.4%20adopted-ff69b4.svg)](CONTRIBUTING.md)
+
 A simple command line tool to give you a fancy command line interface to dive into laws, theories, principles and patterns listed in the repo [hacker-laws](https://github.com/dwmkerr/hacker-laws) by [Dave Kerr](https://github.com/dwmkerr).
 
 ## How To Install
