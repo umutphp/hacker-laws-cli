@@ -34,7 +34,7 @@ hacker-laws-cli list
 
 ### Download and use official binary
 
-Visit the latest release page and download the binary correspondingly.
+Visit the [latest release page](https://github.com/umutphp/hacker-laws-cli/releases/latest) and download the binary correspondingly.
 
 ```bash
 wget -O /usr/local/bin/hacker-laws-cli https://latest-binary-url
