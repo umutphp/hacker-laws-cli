@@ -9,6 +9,9 @@ import (
 
 	"hacker-laws-cli/lib/repo"
 	"hacker-laws-cli/lib/parser"
+
+    "github.com/alecthomas/chroma/quick"
+    colorable "github.com/mattn/go-colorable"
 )
 
 func main() {
@@ -36,7 +39,22 @@ func main() {
     
     if arguments[0] == "random" {
         randomContent := hackerLaws.RandomContent()
-        randomContent.Display()
+        // randomContent.Display()
+
+        stdout1 := colorable.NewColorableStdout()
+        content := "\n" + "## " + randomContent.Title + "\n"
+        content  = content + repo.StripMDTags(randomContent.Body)
+        content  = content + "-----------------------------------------------------" + "\n"
+        content  = content + "         github.com/dwmkerr/hacker-laws by Dave Kerr " + "\n"
+        content  = content + "-----------------------------------------------------" + "\n"
+
+        // colorize and print the documentation
+        if err := quick.Highlight(stdout1, string(content), "markdown", "terminal256", "native"); err != nil {
+            panic(err)
+        }
+
+        // turn off the coloring and reprint a newline
+        stdout1.Write([]byte("\033[0m\n"))
         return
     }
 }
